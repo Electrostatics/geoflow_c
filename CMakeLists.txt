@@ -40,7 +40,7 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/src/cmake)
 find_package(Eigen3)
 if (NOT EIGEN3_INCLUDE_DIR)
    	ExternalProject_add(eigen3
-		URL https://bitbucket.org/eigen/eigen/get/3.2.5.tar.gz
+		URL https://gitlab.com/libeigen/eigen/-/archive/3.3.5/eigen-3.3.5.tar.gz
 		CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR})
 
 	ExternalProject_Get_Property(eigen3 source_dir)
