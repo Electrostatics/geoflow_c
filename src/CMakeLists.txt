@@ -4,7 +4,7 @@ option(ENABLE_GEOFLOW_APBS "geoflow APBS" OFF)
 if(ENABLE_GEOFLOW_APBS)
    add_definitions(-DGEOFLOW_APBS)
    include_directories(
-         ../../../src/ 
+         ../../../src/
          ../../../build/src
          ../../../externals/fetk/maloc/src/base
          ../../../externals/fetk/maloc/src/vsys
