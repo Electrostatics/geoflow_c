@@ -20,11 +20,9 @@ add_executable(GeometricFlow
 #  build standalone C example
 #
 add_executable(GeometricFlowWrap
-     runGeometricFlowWrap.c
+     runGeometricFlowWrap.cpp
 )
 
 target_link_libraries(GeometricFlowWrap GeometricFlowLib)
-add_dependencies(GeometricFlow eigen3 boost)
-add_dependencies(GeometricFlowLib eigen3 boost)
-add_dependencies(GeometricFlowWrap eigen3 boost)
 
+install(TARGETS GeometricFlowLib GeometricFlow GeometricFlowWrap)
