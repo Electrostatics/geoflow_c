@@ -18,15 +18,12 @@ endif()
 
 option(ENABLE_GEOFLOW_APBS "geoflow APBS" OFF)
 if(ENABLE_GEOFLOW_APBS)
-   add_definitions(-DGEOFLOW_APBS)
-   include_directories(
-         ../../../src/
-         ../../../build/src
-         ../../../externals/fetk/maloc/src/base
-         ../../../externals/fetk/maloc/src/vsys
-         ../../../externals/fetk/maloc/src/vsh
-         ../../../externals/fetk/maloc/src/psh
-         )
+    add_definitions(-DGEOFLOW_APBS)
+    include_directories(
+        ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_BINARY_DIR}/src
+        ${FETK_INSTALL_PREFIX}/include
+	)
 endif()
 
 set(CMAKE_CXX_STANDARD 11)
