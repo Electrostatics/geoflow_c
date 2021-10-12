@@ -1,46 +1,31 @@
-ExternalProject_Add(googlemock
-	SVN_REPOSITORY http://googlemock.googlecode.com/svn/trunk
-	SVN_REVISION -r 519
-	TIMEOUT 120
-	CMAKE_ARGS  -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-				-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG:PATH=DebugLibs
-				-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE:PATH=ReleaseLibs
-	INSTALL_COMMAND ""
-	UPDATE_COMMAND ""
-	LOG_DOWNLOAD ON
-	LOG_CONFIGURE ON
-	LOG_BUILD ON)
+# Googletest needs C++11
+set(CMAKE_CXX_STANDARD 11)
 
-# Google Mock/Test includes
-ExternalProject_Get_Property(googlemock source_dir)
-include_directories(${PROJECT_SOURCE_DIR}/src ${source_dir}/include ${source_dir}/gtest/include)
+include(FetchContent)
+# google test commit e2239ee = v1.11.0
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/e2239ee6043f73722e7aa812a459f54a28552929.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+include_directories(
+	${geoflow_c_SOURCE_DIR}/src
+	${googletest_SOURCE_DIR}/googlemock/include
+)
 
 add_executable(UnitTests test_main.cpp
 	# This is gross, but I've already spent far too long on hacking CMake.
 	# Hopefully Erik can come in and make this pretty.
-	../src/Atom.cpp
-	Atom_test.cpp)
-	#solvationsub_test.cpp)
-	#surfconcz_test.cpp)
+	${geoflow_c_SOURCE_DIR}/src/Atom.cpp
+	Atom_test.cpp
+	#solvationsub_test.cpp
+	#surfconcz_test.cpp
+)
 
-# Need C++11.
-set_property(TARGET UnitTests PROPERTY CXX_STANDARD 11)
-set_property(TARGET UnitTests PROPERTY CXX_STANDARD_REQUIRED ON)
+target_link_libraries(UnitTests gmock_main)
 
-add_dependencies(UnitTests googlemock)
-
-# Google Mock libs
-ExternalProject_Get_Property(googlemock binary_dir)
-target_link_libraries(UnitTests
-	debug ${binary_dir}/DebugLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gmock.a
-	debug ${binary_dir}/gtest/DebugLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gtest.a
-	optimized ${binary_dir}/ReleaseLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gmock.a
-	optimized ${binary_dir}/gtest/ReleaseLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gtest.a)
-
-add_test(UnitTests UnitTests)
-
-# Sort of a hack to get tests to build so that "make test" works.  But now it's called
-# "make check".
-# See http://stackoverflow.com/questions/733475/cmake-ctest-make-test-doesnt-build-tests
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
-                  DEPENDS UnitTests)
+include(GoogleTest)
+gtest_discover_tests(UnitTests)

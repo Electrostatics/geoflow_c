@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.14)
 
 enable_testing()
 
@@ -78,7 +78,7 @@ add_subdirectory(src)
 #
 #  make testing optional
 #
-option(ENABLE_TESTS "Tests" OFF)
-#if(ENABLE_TESTS)
-#  add_subdirectory(test)
-#endif()
+option(ENABLE_TESTS "Tests" ON)
+if(ENABLE_TESTS)
+  add_subdirectory(test)
+endif()
