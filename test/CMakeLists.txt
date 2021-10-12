@@ -1,6 +1,3 @@
-# Googletest needs C++11
-set(CMAKE_CXX_STANDARD 11)
-
 include(FetchContent)
 # google test commit e2239ee = v1.11.0
 FetchContent_Declare(

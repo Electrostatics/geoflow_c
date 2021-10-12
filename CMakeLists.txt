@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
 
-enable_testing()
-
 set(CMAKE_VERBOSE_MAKEFILE on)
 
 include(ExternalProject)
@@ -29,13 +27,6 @@ endif()
 set(CMAKE_CXX_STANDARD 11)
 
 SET(geoflow_standalone_CMAKE_DIR "${geoflow_standalone_SOURCE_DIR}/cmake")
-
-set(GOOGLE_LIBS -L$(GMOCK_HOME)/osx -L$(GMOCK_HOME)/osx/gtest 
-           -lgtest -lgmock)
-
-set(GOOGLE_INCLUDE -I$(GMOCK_HOME)/include 
-	   -I$(GMOCK_HOME)/gtest/include -std=c++11)
-
 
 #
 # Find or install Boost
@@ -78,7 +69,8 @@ add_subdirectory(src)
 #
 #  make testing optional
 #
-option(ENABLE_TESTS "Tests" ON)
+option(ENABLE_TESTS "Tests" OFF)
 if(ENABLE_TESTS)
-  add_subdirectory(test)
+    enable_testing()
+    add_subdirectory(test)
 endif()
