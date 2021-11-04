@@ -74,10 +74,12 @@ class Atom
 {
    private:
 
-      double p_x, p_y, p_z;
-      double p_radius;
-      double p_pqr;
-      double p_ljepsilon;
+      double p_x{0.0};
+      double p_y{0.0};
+      double p_z{0.0};
+      double p_radius{0.0};
+      double p_pqr{0.0};
+      double p_ljepsilon{0.0};
 
       void setRadius( const int ffmodel, double r )
       {
