@@ -77,6 +77,7 @@ Atom::Atom( const int ffmodel, double x, double y, double z, double r, double pq
    setRadius( ffmodel, r );
 
    p_pqr = pqr;
+   p_ljepsilon = 0.;
 }
 
 Atom::Atom( const int ffmodel, double x, double y, double z, double r, double pqr, double e)
