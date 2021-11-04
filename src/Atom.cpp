@@ -59,36 +59,26 @@
 
 using namespace std;
 
-Atom::Atom( )
-{
-   p_x = 0;
-   p_y = 0;
-   p_z = 0;
-   p_radius = 0;
-   p_pqr = 0;
-   p_ljepsilon = 0;
-}
+Atom::Atom()
+{}
+
 Atom::Atom( const int ffmodel, double x, double y, double z, double r, double pqr)
+  : p_x(x),
+    p_y(y),
+    p_z(z),
+    p_pqr(pqr)
 {
-   p_x = x;
-   p_y = y;
-   p_z = z;
-
    setRadius( ffmodel, r );
-
-   p_pqr = pqr;
 }
 
 Atom::Atom( const int ffmodel, double x, double y, double z, double r, double pqr, double e)
+  : p_x(x),
+    p_y(y),
+    p_z(z),
+    p_pqr(pqr),
+    p_ljepsilon(e)
 {
-   p_x = x;
-   p_y = y;
-   p_z = z;
-
    setRadius( ffmodel, r );
-
-   p_pqr = pqr;
-   p_ljepsilon = e;
 }
 
 //~Atom() { };
