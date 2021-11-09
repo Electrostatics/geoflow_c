@@ -59,99 +59,104 @@
 
 using namespace std;
 
-struct GeometricFlowInput getGeometricFlowParams()
-{
-  // create the Geoflow Class
-  GeometricFlow GF;
-  // get the struct for use in the c code
-  struct GeometricFlowInput GFI = GF;
-
-  return GFI;
-}
-
-//
-//  for testing only!
-//
-struct GeometricFlowOutput runGeometricFlowWrap
-   ( struct GeometricFlowInput geoflowParams )
+namespace geoflow
 {
 
-   //cout << "boo from GeometricFlowWrap!" << endl; 
+   struct GeometricFlowInput getGeometricFlowParams()
+   {
+   // create the Geoflow Class
+   GeometricFlow GF;
+   // get the struct for use in the c code
+   struct GeometricFlowInput GFI = GF;
 
-   GeometricFlow GF( geoflowParams );
-   
-   AtomList emptyAtomList; // need to fill this with atoms
-   AtomList AL( "imidazole.xyzr", GF.getRadExp(), GF.getFFModel() ); 
-
-   struct GeometricFlowOutput GFO = GF.run( AL ); //emptyAtomList );
-   
-   return GFO;
-}
-
-//
-//  print the geometric flow structure for debugging
-//
-void printGeometricFlowStruct( struct GeometricFlowInput geoflowIn )
-{
-   printf("GeometricFlowInput: %i, %f, %f, %f, %f, %f, %f, %f, %f, %f, %i, %f\n", 
-         geoflowIn.m_boundaryCondition,
-         geoflowIn.m_grid[0],
-         geoflowIn.m_grid[1],
-         geoflowIn.m_grid[2],
-         geoflowIn.m_gamma, 
-         geoflowIn.m_pdie,
-         geoflowIn.m_sdie,
-         geoflowIn.m_press,
-         geoflowIn.m_tol,
-         geoflowIn.m_bconc,
-         geoflowIn.m_vdwdispersion,
-         geoflowIn.m_etolSolvation );
-}
-
-//
-//  to call from APBS
-//
-#ifdef GEOFLOW_APBS
-struct GeometricFlowOutput runGeometricFlowWrapAPBS
-   ( struct GeometricFlowInput geoflowParams,
-     Valist* molecules )   // or Valist* molecules[]
-{
-   //cout << "boo from GeometricFlowWrap!" << endl; 
-
-   //
-   //  create the GeometricFlow object
-   //
-   GeometricFlow GF( geoflowParams );
-
-   //
-   // convert Valist to an AtomList
-   //
-   //cout << "converting atom list" << endl;
-   AtomList atomList;
-   Vatom *atom;
-   unsigned int natoms = Valist_getNumberAtoms(molecules);
-   //cout << "natoms: " << natoms << endl;
-   for (unsigned int i=0; i < natoms; i++) 
-   {		
-      atom = Valist_getAtom(molecules, i);
-      //cout << "i: " << i << endl;
-      Atom myAtom( 
-            GF.getFFModel(),
-         Vatom_getPosition(atom)[0],
-         Vatom_getPosition(atom)[1],		
-         Vatom_getPosition(atom)[2],		
-         Vatom_getRadius(atom) * GF.getRadExp(),
-         Vatom_getCharge(atom) );
-      atomList.add( myAtom );
+   return GFI;
    }
-   //cout << "done with atom list" << endl;
-   //atomList.print();
 
    //
-   //  run Geoflow!
+   //  for testing only!
    //
-   struct GeometricFlowOutput GFO = GF.run( atomList );
-   
-   return GFO;
-}
+   struct GeometricFlowOutput runGeometricFlowWrap
+      ( struct GeometricFlowInput geoflowParams )
+   {
+
+      //cout << "boo from GeometricFlowWrap!" << endl; 
+
+      GeometricFlow GF( geoflowParams );
+      
+      AtomList emptyAtomList; // need to fill this with atoms
+      AtomList AL( "imidazole.xyzr", GF.getRadExp(), GF.getFFModel() ); 
+
+      struct GeometricFlowOutput GFO = GF.run( AL ); //emptyAtomList );
+      
+      return GFO;
+   }
+
+   //
+   //  print the geometric flow structure for debugging
+   //
+   void printGeometricFlowStruct( struct GeometricFlowInput geoflowIn )
+   {
+      printf("GeometricFlowInput: %i, %f, %f, %f, %f, %f, %f, %f, %f, %f, %i, %f\n", 
+            geoflowIn.m_boundaryCondition,
+            geoflowIn.m_grid[0],
+            geoflowIn.m_grid[1],
+            geoflowIn.m_grid[2],
+            geoflowIn.m_gamma, 
+            geoflowIn.m_pdie,
+            geoflowIn.m_sdie,
+            geoflowIn.m_press,
+            geoflowIn.m_tol,
+            geoflowIn.m_bconc,
+            geoflowIn.m_vdwdispersion,
+            geoflowIn.m_etolSolvation );
+   }
+
+   //
+   //  to call from APBS
+   //
+#ifdef GEOFLOW_APBS
+   struct GeometricFlowOutput runGeometricFlowWrapAPBS
+      ( struct GeometricFlowInput geoflowParams,
+      Valist* molecules )   // or Valist* molecules[]
+   {
+      //cout << "boo from GeometricFlowWrap!" << endl; 
+
+      //
+      //  create the GeometricFlow object
+      //
+      GeometricFlow GF( geoflowParams );
+
+      //
+      // convert Valist to an AtomList
+      //
+      //cout << "converting atom list" << endl;
+      AtomList atomList;
+      Vatom *atom;
+      unsigned int natoms = Valist_getNumberAtoms(molecules);
+      //cout << "natoms: " << natoms << endl;
+      for (unsigned int i=0; i < natoms; i++) 
+      {		
+         atom = Valist_getAtom(molecules, i);
+         //cout << "i: " << i << endl;
+         Atom myAtom( 
+               GF.getFFModel(),
+            Vatom_getPosition(atom)[0],
+            Vatom_getPosition(atom)[1],		
+            Vatom_getPosition(atom)[2],		
+            Vatom_getRadius(atom) * GF.getRadExp(),
+            Vatom_getCharge(atom) );
+         atomList.add( myAtom );
+      }
+      //cout << "done with atom list" << endl;
+      //atomList.print();
+
+      //
+      //  run Geoflow!
+      //
+      struct GeometricFlowOutput GFO = GF.run( atomList );
+      
+      return GFO;
+   }
 #endif // GEOFLOW_APBS
+
+}

@@ -57,6 +57,8 @@
 
 #include "Atom.h"
 
+using namespace geoflow;
+
 TEST(AtomConstruction, DefualtCtor) {
 	Atom atom;
 	ASSERT_EQ(atom.x(), 0.0);

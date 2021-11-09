@@ -70,89 +70,94 @@
 
 using namespace std;
 
-class Atom
+namespace geoflow
 {
-   private:
+   
+   class Atom
+   {
+      private:
 
-      double p_x{0.0};
-      double p_y{0.0};
-      double p_z{0.0};
-      double p_radius{0.0};
-      double p_pqr{0.0};
-      double p_ljepsilon{0.0};
+         double p_x{0.0};
+         double p_y{0.0};
+         double p_z{0.0};
+         double p_radius{0.0};
+         double p_pqr{0.0};
+         double p_ljepsilon{0.0};
 
-      void setRadius( const int ffmodel, double r )
-      {
-         if (ffmodel == 1 )
-            p_radius = ( r < 1e-6 ) ? 1.21 : r;
-         else
-            p_radius = r;
-      }
+         void setRadius( const int ffmodel, double r )
+         {
+            if (ffmodel == 1 )
+               p_radius = ( r < 1e-6 ) ? 1.21 : r;
+            else
+               p_radius = r;
+         }
 
-   public:
+      public:
 
-      //
-      //  empty constructor
-      //
-      Atom( );
-      Atom( const int ffmodel, double x, double y, double z, double r, double pqr);
-      Atom( const int ffmodel, double x, double y, double z, double r, double pqr, double e );
-      //~Path() { };
+         //
+         //  empty constructor
+         //
+         Atom( );
+         Atom( const int ffmodel, double x, double y, double z, double r, double pqr);
+         Atom( const int ffmodel, double x, double y, double z, double r, double pqr, double e );
+         //~Path() { };
 
-      //
-      //  copy constructor
-      //
-      Atom( const Atom& A ) ;
-      Atom( const Atom* A ) ;
+         //
+         //  copy constructor
+         //
+         Atom( const Atom& A ) ;
+         Atom( const Atom* A ) ;
 
-      //
-      //  operator=
-      //
-      //Atom& operator=( const Atom& A ) ;
-      //ostream& operator<<( ostream& os, const Atom& A );
+         //
+         //  operator=
+         //
+         //Atom& operator=( const Atom& A ) ;
+         //ostream& operator<<( ostream& os, const Atom& A );
 
-      double x() const { return p_x; }
-      double y() const { return p_y; }
-      double z() const { return p_z; }
-      double r() const { return p_radius; }
-      double pqr() const { return p_pqr; }
-      double epsilon() const { return p_ljepsilon; }
+         double x() const { return p_x; }
+         double y() const { return p_y; }
+         double z() const { return p_z; }
+         double r() const { return p_radius; }
+         double pqr() const { return p_pqr; }
+         double epsilon() const { return p_ljepsilon; }
 
-      //
-      //  for debugging
-      //
-      void print() const;
-};
+         //
+         //  for debugging
+         //
+         void print() const;
+   };
 
-class AtomList
-{
-   private:
+   class AtomList
+   {
+      private:
 
-      vector< Atom > p_atomList;
+         vector< Atom > p_atomList;
 
-   public:
+      public:
 
-      AtomList();
+         AtomList();
 
-      AtomList( string xyzr_file, const double radexp, const int ffmodel );
+         AtomList( string xyzr_file, const double radexp, const int ffmodel );
 
-      //AtomList( double* xyzrs, double* pqrs, const int num_atoms, const double radexp, const int ffmodel );
+         //AtomList( double* xyzrs, double* pqrs, const int num_atoms, const double radexp, const int ffmodel );
 
-      AtomList( const AtomList& AL ) { p_atomList = AL.p_atomList ; }
+         AtomList( const AtomList& AL ) { p_atomList = AL.p_atomList ; }
 
-      AtomList( const AtomList* AL ) { p_atomList = AL->p_atomList ; }
+         AtomList( const AtomList* AL ) { p_atomList = AL->p_atomList ; }
 
-      unsigned int size() const { return p_atomList.size(); }
+         unsigned int size() const { return p_atomList.size(); }
 
-      const Atom& get( unsigned int i ) const { return p_atomList[i]; }
+         const Atom& get( unsigned int i ) const { return p_atomList[i]; }
 
-      void add( Atom A ) { p_atomList.push_back(A); };
+         void add( Atom A ) { p_atomList.push_back(A); };
 
-      void changeChargeDistribution
-         ( Mat<>& charget, Mat<>& corlocqt, Mat< size_t>& loc_qt,
-           const ComData& comData ) const;
+         void changeChargeDistribution
+            ( Mat<>& charget, Mat<>& corlocqt, Mat< size_t>& loc_qt,
+            const ComData& comData ) const;
 
-      void print() const;
-};
+         void print() const;
+   };
+
+}
 
 #endif

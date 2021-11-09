@@ -60,6 +60,7 @@
 #include "GeometricFlow.h"
 #include "Atom.h"
 
+using namespace geoflow;
 
 double getVar( std::string var_name, 
                boost::property_tree::ptree pt, 
