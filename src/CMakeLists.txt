@@ -12,8 +12,6 @@ add_library(GeometricFlowLib
 #
 add_executable(GeometricFlow 
      runGeometricFlow.cpp
-     GeometricFlow.cpp
-     Atom.cpp
      )
 
 #
@@ -23,6 +21,7 @@ add_executable(GeometricFlowWrap
      runGeometricFlowWrap.cpp
 )
 
+target_link_libraries(GeometricFlow GeometricFlowLib)
 target_link_libraries(GeometricFlowWrap GeometricFlowLib)
 
 install(TARGETS GeometricFlowLib GeometricFlow GeometricFlowWrap)
