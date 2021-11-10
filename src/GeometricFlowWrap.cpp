@@ -58,57 +58,53 @@
 
 
 using namespace std;
+using namespace geoflow;
 
-namespace geoflow
+struct GeometricFlowInput getGeometricFlowParams()
+{
+// create the Geoflow Class
+GeometricFlow GF;
+// get the struct for use in the c code
+struct GeometricFlowInput GFI = GF;
+
+return GFI;
+}
+
+//
+//  for testing only!
+//
+struct GeometricFlowOutput runGeometricFlowWrap
+   ( struct GeometricFlowInput geoflowParams )
 {
 
-   struct GeometricFlowInput getGeometricFlowParams()
-   {
-   // create the Geoflow Class
-   GeometricFlow GF;
-   // get the struct for use in the c code
-   struct GeometricFlowInput GFI = GF;
+   //cout << "boo from GeometricFlowWrap!" << endl; 
 
-   return GFI;
-   }
+   GeometricFlow GF( geoflowParams );
+   
+   AtomList emptyAtomList; // need to fill this with atoms
+   AtomList AL( "imidazole.xyzr", GF.getRadExp(), GF.getFFModel() ); 
 
-   //
-   //  for testing only!
-   //
-   struct GeometricFlowOutput runGeometricFlowWrap
-      ( struct GeometricFlowInput geoflowParams )
-   {
+   struct GeometricFlowOutput GFO = GF.run( AL ); //emptyAtomList );
+   
+   return GFO;
+}
 
-      //cout << "boo from GeometricFlowWrap!" << endl; 
-
-      GeometricFlow GF( geoflowParams );
-      
-      AtomList emptyAtomList; // need to fill this with atoms
-      AtomList AL( "imidazole.xyzr", GF.getRadExp(), GF.getFFModel() ); 
-
-      struct GeometricFlowOutput GFO = GF.run( AL ); //emptyAtomList );
-      
-      return GFO;
-   }
-
-   //
-   //  print the geometric flow structure for debugging
-   //
-   void printGeometricFlowStruct( struct GeometricFlowInput geoflowIn )
-   {
-      printf("GeometricFlowInput: %i, %f, %f, %f, %f, %f, %f, %f, %f, %f, %i, %f\n", 
-            geoflowIn.m_boundaryCondition,
-            geoflowIn.m_grid[0],
-            geoflowIn.m_grid[1],
-            geoflowIn.m_grid[2],
-            geoflowIn.m_gamma, 
-            geoflowIn.m_pdie,
-            geoflowIn.m_sdie,
-            geoflowIn.m_press,
-            geoflowIn.m_tol,
-            geoflowIn.m_bconc,
-            geoflowIn.m_vdwdispersion,
-            geoflowIn.m_etolSolvation );
-   }
-
+//
+//  print the geometric flow structure for debugging
+//
+void printGeometricFlowStruct( struct GeometricFlowInput geoflowIn )
+{
+   printf("GeometricFlowInput: %i, %f, %f, %f, %f, %f, %f, %f, %f, %f, %i, %f\n", 
+         geoflowIn.m_boundaryCondition,
+         geoflowIn.m_grid[0],
+         geoflowIn.m_grid[1],
+         geoflowIn.m_grid[2],
+         geoflowIn.m_gamma, 
+         geoflowIn.m_pdie,
+         geoflowIn.m_sdie,
+         geoflowIn.m_press,
+         geoflowIn.m_tol,
+         geoflowIn.m_bconc,
+         geoflowIn.m_vdwdispersion,
+         geoflowIn.m_etolSolvation );
 }

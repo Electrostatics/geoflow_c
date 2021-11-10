@@ -54,19 +54,16 @@
 
 #include "GeometricFlowStruct.h"
 
-namespace geoflow
-{
-
 #ifdef __cplusplus
-   extern "C"{
+extern "C"{
 #endif
 
-   struct GeometricFlowOutput runGeometricFlowWrap
-      ( struct GeometricFlowInput geoflowParams );
+struct GeometricFlowOutput runGeometricFlowWrap
+   ( struct GeometricFlowInput geoflowParams );
 
-   void printGeometricFlowStruct( struct GeometricFlowInput geoflowIn );
+void printGeometricFlowStruct( struct GeometricFlowInput geoflowIn );
 
-   struct GeometricFlowInput getGeometricFlowParams();
+struct GeometricFlowInput getGeometricFlowParams();
 
 #ifdef __cplusplus
 }
