@@ -68,6 +68,3 @@ struct GeometricFlowInput getGeometricFlowParams();
 #ifdef __cplusplus
 }
 #endif
-
-}
-

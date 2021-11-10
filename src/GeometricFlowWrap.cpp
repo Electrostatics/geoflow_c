@@ -58,16 +58,15 @@
 
 
 using namespace std;
-using namespace geoflow;
 
 struct GeometricFlowInput getGeometricFlowParams()
 {
-// create the Geoflow Class
-GeometricFlow GF;
-// get the struct for use in the c code
-struct GeometricFlowInput GFI = GF;
+   // create the Geoflow Class
+   geoflow::GeometricFlow GF;
+   // get the struct for use in the c code
+   GeometricFlowInput GFI(GF);
 
-return GFI;
+   return GFI;
 }
 
 //
@@ -79,10 +78,10 @@ struct GeometricFlowOutput runGeometricFlowWrap
 
    //cout << "boo from GeometricFlowWrap!" << endl; 
 
-   GeometricFlow GF( geoflowParams );
+   geoflow::GeometricFlow GF( geoflowParams );
    
-   AtomList emptyAtomList; // need to fill this with atoms
-   AtomList AL( "imidazole.xyzr", GF.getRadExp(), GF.getFFModel() ); 
+   geoflow::AtomList emptyAtomList; // need to fill this with atoms
+   geoflow::AtomList AL( "imidazole.xyzr", GF.getRadExp(), GF.getFFModel() ); 
 
    struct GeometricFlowOutput GFO = GF.run( AL ); //emptyAtomList );
    

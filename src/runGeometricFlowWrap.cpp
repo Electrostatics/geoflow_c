@@ -54,7 +54,6 @@
 
 #include "GeometricFlowWrap.h"
 
-using namespace geoflow;
 
 int main( int argc, char *argv[] )
 {

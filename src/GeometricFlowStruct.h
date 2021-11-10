@@ -45,31 +45,45 @@ GeometricFlowInput() :
   // and solute molecules in non-polar contribution of solvation energy.
   // It is different from the surface definition (i.e., van der Waals
   // surface) which is critical to define the simulation domain)
-    m_vdwdispersion(0),
+  m_vdwdispersion(0),
 
-    m_gamma(0.0001),
+  m_gamma(0.0001),
 
   // grid spacing; distance per cell
-    m_grid{0.25, 0.25, 0.25},
+  m_grid{0.25, 0.25, 0.25},
 
   // error tolerance for th esolvation difference values.  Formerly CREVALUE
   // in the Fortran and C code.
-    m_etolSolvation(0.01),
+  m_etolSolvation(0.01),
 
   // Tolerance for the Eigen pbsolver
-    m_tol(1e-4),
+  m_tol(1e-4),
 
   // Solute dielectric
-    m_pdie(1.5),
+  m_pdie(1.5),
 
   // Solvent dielectric, from Thomas et. al.
-    m_sdie(80),
+  m_sdie(80),
 
-    m_press(0.008),
+  m_press(0.008),
 
   // Bulk solvent density from Thomas et. al.
-    m_bconc(0.03347)
-    {}
+  m_bconc(0.03347)
+{}
+
+GeometricFlowInput(const GeometricFlowInput& orig) :
+  m_boundaryCondition(orig.m_boundaryCondition),
+  m_vdwdispersion(orig.m_vdwdispersion),
+  m_gamma(orig.m_gamma),
+  m_grid{orig.m_grid[0], orig.m_grid[1], orig.m_grid[2]},
+  m_etolSolvation(orig.m_etolSolvation),
+  m_tol(orig.m_tol),
+  m_pdie(orig.m_pdie),
+  m_sdie(orig.m_sdie),
+  m_press(orig.m_press),
+  m_bconc(orig.m_bconc)
+{}
+
 #endif
 
 } ;

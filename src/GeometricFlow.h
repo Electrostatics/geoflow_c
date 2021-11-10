@@ -79,7 +79,7 @@ using namespace std;
 namespace geoflow
 {
 
-   class GeometricFlow : protected GeometricFlowInput
+   class GeometricFlow : public GeometricFlowInput
    {
       private:
 
