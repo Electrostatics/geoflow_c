@@ -54,10 +54,6 @@
 
 #include "GeometricFlowStruct.h"
 
-#ifdef GEOFLOW_APBS
-  #include "generic/valist.h"
-#endif
-
 namespace geoflow
 {
 
@@ -69,12 +65,6 @@ namespace geoflow
       ( struct GeometricFlowInput geoflowParams );
 
    void printGeometricFlowStruct( struct GeometricFlowInput geoflowIn );
-
-#ifdef GEOFLOW_APBS
-struct GeometricFlowOutput runGeometricFlowWrapAPBS
-   ( struct GeometricFlowInput geoflowParams,
-      Valist* all_molecules ); 
-#endif //GEOFLOW_APBS
 
    struct GeometricFlowInput getGeometricFlowParams();
 
