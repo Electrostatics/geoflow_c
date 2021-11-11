@@ -61,12 +61,12 @@ using namespace std;
 
 struct GeometricFlowInput getGeometricFlowParams()
 {
-  // create the Geoflow Class
-  GeometricFlow GF;
-  // get the struct for use in the c code
-  struct GeometricFlowInput GFI = GF;
+   // create the Geoflow Class
+   geoflow::GeometricFlow GF;
+   // get the struct for use in the c code
+   GeometricFlowInput GFI(GF);
 
-  return GFI;
+   return GFI;
 }
 
 //
@@ -78,10 +78,10 @@ struct GeometricFlowOutput runGeometricFlowWrap
 
    //cout << "boo from GeometricFlowWrap!" << endl; 
 
-   GeometricFlow GF( geoflowParams );
+   geoflow::GeometricFlow GF( geoflowParams );
    
-   AtomList emptyAtomList; // need to fill this with atoms
-   AtomList AL( "imidazole.xyzr", GF.getRadExp(), GF.getFFModel() ); 
+   geoflow::AtomList emptyAtomList; // need to fill this with atoms
+   geoflow::AtomList AL( "imidazole.xyzr", GF.getRadExp(), GF.getFFModel() ); 
 
    struct GeometricFlowOutput GFO = GF.run( AL ); //emptyAtomList );
    
@@ -107,51 +107,3 @@ void printGeometricFlowStruct( struct GeometricFlowInput geoflowIn )
          geoflowIn.m_vdwdispersion,
          geoflowIn.m_etolSolvation );
 }
-
-//
-//  to call from APBS
-//
-#ifdef GEOFLOW_APBS
-struct GeometricFlowOutput runGeometricFlowWrapAPBS
-   ( struct GeometricFlowInput geoflowParams,
-     Valist* molecules )   // or Valist* molecules[]
-{
-   //cout << "boo from GeometricFlowWrap!" << endl; 
-
-   //
-   //  create the GeometricFlow object
-   //
-   GeometricFlow GF( geoflowParams );
-
-   //
-   // convert Valist to an AtomList
-   //
-   //cout << "converting atom list" << endl;
-   AtomList atomList;
-   Vatom *atom;
-   unsigned int natoms = Valist_getNumberAtoms(molecules);
-   //cout << "natoms: " << natoms << endl;
-   for (unsigned int i=0; i < natoms; i++) 
-   {		
-      atom = Valist_getAtom(molecules, i);
-      //cout << "i: " << i << endl;
-      Atom myAtom( 
-            GF.getFFModel(),
-         Vatom_getPosition(atom)[0],
-         Vatom_getPosition(atom)[1],		
-         Vatom_getPosition(atom)[2],		
-         Vatom_getRadius(atom) * GF.getRadExp(),
-         Vatom_getCharge(atom) );
-      atomList.add( myAtom );
-   }
-   //cout << "done with atom list" << endl;
-   //atomList.print();
-
-   //
-   //  run Geoflow!
-   //
-   struct GeometricFlowOutput GFO = GF.run( atomList );
-   
-   return GFO;
-}
-#endif // GEOFLOW_APBS

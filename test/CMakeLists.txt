@@ -14,15 +14,12 @@ include_directories(
 )
 
 add_executable(UnitTests test_main.cpp
-	# This is gross, but I've already spent far too long on hacking CMake.
-	# Hopefully Erik can come in and make this pretty.
-	${geoflow_c_SOURCE_DIR}/src/Atom.cpp
 	Atom_test.cpp
 	#solvationsub_test.cpp
 	#surfconcz_test.cpp
 )
 
-target_link_libraries(UnitTests gmock_main)
+target_link_libraries(UnitTests gmock_main GeometricFlowLib)
 
 include(GoogleTest)
 gtest_discover_tests(UnitTests)

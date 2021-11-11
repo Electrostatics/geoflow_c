@@ -76,197 +76,201 @@
 
 using namespace std;
 
-
-class GeometricFlow : protected GeometricFlowInput
+namespace geoflow
 {
-   private:
 
-      //
-      //  Input Parameters - see .cpp for available documentation on these
-      //  variables.
-      //
-      double p_expervalue;
-      int    p_npiter;
-      int    p_ngiter;
-      double p_tauval;
-      double p_prob;
-      int    p_ffmodel;
-      double p_sigmas;
-      double p_epsilonw;
-      double p_extvalue;
-      int    p_iadi;
-      double p_alpha;
-      double p_tottf;
-      int    p_maxstep;
-      int    p_radexp;
-      double p_holst_energy_unit;
+   class GeometricFlow : public GeometricFlowInput
+   {
+      private:
 
-      ComData p_comdata;
+         //
+         //  Input Parameters - see .cpp for available documentation on these
+         //  variables.
+         //
+         double p_expervalue;
+         int    p_npiter;
+         int    p_ngiter;
+         double p_tauval;
+         double p_prob;
+         int    p_ffmodel;
+         double p_sigmas;
+         double p_epsilonw;
+         double p_extvalue;
+         int    p_iadi;
+         double p_alpha;
+         double p_tottf;
+         int    p_maxstep;
+         int    p_radexp;
+         double p_holst_energy_unit;
 
-      int p_lj_iosetar;
-      int p_lj_iosetaa;
-      int p_lj_iwca;
+         ComData p_comdata;
 
-
-   public:
-
-      // only one boundary condition (BCFL_MDH) is actually implemented, so this
-      // method doesn't change anything, documented for future updates in
-      // github.
-      void setBoundaryCondition( BoundaryType type ) { m_boundaryCondition = type; }
-
-   private:
+         int p_lj_iosetar;
+         int p_lj_iosetaa;
+         int p_lj_iwca;
 
 
-      // set up all the default variables
-      void setupDefaults();  
+      public:
 
-      double left(const valarray<double>& pr, double h, double ev)
-      {
-         return floor( (pr - ev).min()/h ) * h - ev;
-      }
+         // only one boundary condition (BCFL_MDH) is actually implemented, so this
+         // method doesn't change anything, documented for future updates in
+         // github.
+         void setBoundaryCondition( BoundaryType type ) { m_boundaryCondition = type; }
 
-      double right(const valarray<double>& pr, double h, double ev)
-      {
-         return ceil( (pr + ev).max()/h ) * h + ev;
-      }
-
-      double dot (double x, double y, double z) { return x*x + y*y + z*z; }
+      private:
 
 
-      void domainInitialization( const AtomList& atomlist );
+         // set up all the default variables
+         void setupDefaults();  
 
-      void yhsurface( const AtomList& atomList, 
-         double tott, double dt, Mat<>& phitotx, Mat<>& surfu, int iloop,
-         double& area, double& volume, double& attint, double alpha, int iadi,
-         int igfin, double roro, double conms );
+         double left(const valarray<double>& pr, double h, double ev)
+         {
+            return floor( (pr - ev).min()/h ) * h - ev;
+         }
 
-      void potIntegral(double rcfactor, size_t natm,
-            valarray<double>& atom_x, valarray<double>& atom_y,
-            valarray<double>& atom_z, valarray<double>& seta12,
-            valarray<double>& seta6, valarray<double>& epsilon,
-            valarray<double>& sigma, Mat<>& g, Mat<>& potr, Mat<>& pota);
+         double right(const valarray<double>& pr, double h, double ev)
+         {
+            return ceil( (pr + ev).max()/h ) * h + ev;
+         }
+
+         double dot (double x, double y, double z) { return x*x + y*y + z*z; }
+
+
+         void domainInitialization( const AtomList& atomlist );
+
+         void yhsurface( const AtomList& atomList, 
+            double tott, double dt, Mat<>& phitotx, Mat<>& surfu, int iloop,
+            double& area, double& volume, double& attint, double alpha, int iadi,
+            int igfin, double roro, double conms );
+
+         void potIntegral(double rcfactor, size_t natm,
+               valarray<double>& atom_x, valarray<double>& atom_y,
+               valarray<double>& atom_z, valarray<double>& seta12,
+               valarray<double>& seta6, valarray<double>& epsilon,
+               valarray<double>& sigma, Mat<>& g, Mat<>& potr, Mat<>& pota);
+         
+         double volumeIntegration(const Mat<>& f);
+
+         void upwinding(double dt, int nt, 
+                                 Mat<>& g, Mat<>& su, Mat<>& phitotx);
+
+         void initial(double xl, double yl, double zl, int n_atom,
+               const std::valarray<double>& atom_x, const std::valarray<double>& atom_y,
+               const std::valarray<double>& atom_z, const std::valarray<double>& atom_r,
+               Mat<>& g, Mat<>& phi);
+
+         void normalizeSurfuAndEps (Mat<>& surfu, Mat<>& eps);
+
+         void computeSoleng(double& soleng, 
+                     Mat<>& phi, Mat<>& charget, Mat<size_t>& loc_qt);
+
+         void seteqb( Mat<>& bg, const AtomList& al, const Mat<>& charget,
+               const Mat<>& corlocqt);
+
+         double qb(size_t i,size_t j,size_t k, const AtomList& al,
+               const Mat<>& charget, const Mat<>& corlocqt );
+         
+         double qbboundary( double x, double y, double z, const AtomList& al );
+         
+         double qbinterior(double x, double y, double z, 
+               const Mat<>& charget, const Mat<>& corlocqt);
+
+         void pbsolver(const Mat<>& eps, Mat<>& phi, const Mat<>& bgf, double tol, int iter);
+
+      public:
+
+         //
+         //  empty constructor
+         //  (initialize with default parameters)
+         GeometricFlow( );
+         //  (initialize from struct)
+         GeometricFlow( const struct GeometricFlowInput& gfi );
       
-      double volumeIntegration(const Mat<>& f);
+         friend struct GeometricFlowInput getGeometricFlowParams();
 
-      void upwinding(double dt, int nt, 
-                              Mat<>& g, Mat<>& su, Mat<>& phitotx);
+         //
+         //  copy constructor
+         // 
+         GeometricFlow( const GeometricFlow& gf ) ;
+         GeometricFlow( const GeometricFlow* gf ) ;
 
-      void initial(double xl, double yl, double zl, int n_atom,
-            const std::valarray<double>& atom_x, const std::valarray<double>& atom_y,
-            const std::valarray<double>& atom_z, const std::valarray<double>& atom_r,
-            Mat<>& g, Mat<>& phi);
+         //
+         //  operator=
+         //
+         //GeometricFlow& operator=( const GeometricFlow& gf ) ;
 
-      void normalizeSurfuAndEps (Mat<>& surfu, Mat<>& eps);
+         //
+         //  Set and Get methods
+         //
+         void setExperValue( double exper_val ) { p_expervalue = exper_val; }
 
-      void computeSoleng(double& soleng, 
-                   Mat<>& phi, Mat<>& charget, Mat<size_t>& loc_qt);
+         void setPressure( double pres_i ) { m_press = pres_i; }
+         
+         void setGamma( double gamma ) { m_gamma = gamma; }
+         
+         void setFFModel( int ffmodel ) { p_ffmodel = ffmodel; }
 
-      void seteqb( Mat<>& bg, const AtomList& al, const Mat<>& charget,
-            const Mat<>& corlocqt);
+         void setVDWDispersion( int vdwdispersion ) 
+               { m_vdwdispersion = vdwdispersion; }
 
-      double qb(size_t i,size_t j,size_t k, const AtomList& al,
-            const Mat<>& charget, const Mat<>& corlocqt );
+         void setExtValue( double extvalue ) { p_extvalue = extvalue; }
+         
+         void setSDie( double epsilons ) { m_sdie = epsilons; }
+         
+         void setPDie( double epsilonp ) { m_pdie = epsilonp; }
+
+         void setGrid( double grid[3] ) 
+            { m_grid[0] = grid[0];
+            m_grid[1] = grid[1];
+            m_grid[2] = grid[2]; }
+
+         void setETolSolvation( double etol ) { m_etolSolvation = etol ; }
+
+         void setETolSolver( double tol ) { m_tol = tol ; }
       
-      double qbboundary( double x, double y, double z, const AtomList& al );
-      
-      double qbinterior(double x, double y, double z, 
-            const Mat<>& charget, const Mat<>& corlocqt);
+         //Lennard-Jones well depth parameter for water
+         void setLJWell( double depth ) { p_epsilonw = depth ; } 
 
-      void pbsolver(const Mat<>& eps, Mat<>& phi, const Mat<>& bgf, double tol, int iter);
+         // uncomment if needed:
+         //void setNPiter( int npiter ) { p_npiter = npiter; }
+         //void setNGiter( int ngiter ) { p_ngiter = ngiter; }
+         //void setTauVal( double tauval ) { p_tauval = p_tauval; }
+         //void setProb( double prob ) { p_prob = prob; }
 
-   public:
+         double getExperValue() { return p_expervalue; }
 
-      //
-      //  empty constructor
-      //  (initialize with default parameters)
-      GeometricFlow( );
-      //  (initialize from struct)
-      GeometricFlow( const struct GeometricFlowInput& gfi );
-     
-      friend struct GeometricFlowInput getGeometricFlowParams();
+         double getPressure() { return m_press; }
+         
+         double getGamma() { return m_gamma; }
+         
+         int getFFModel() { return p_ffmodel; }
 
-      //
-      //  copy constructor
-      // 
-      GeometricFlow( const GeometricFlow& gf ) ;
-      GeometricFlow( const GeometricFlow* gf ) ;
+         double getVDWDispersion() { return m_vdwdispersion; }
 
-      //
-      //  operator=
-      //
-      //GeometricFlow& operator=( const GeometricFlow& gf ) ;
+         double getExtValue() { return p_extvalue; }
+         
+         double getSDie() { return m_sdie; }
+         
+         double getPDie() { return m_pdie; }
 
-      //
-      //  Set and Get methods
-      //
-      void setExperValue( double exper_val ) { p_expervalue = exper_val; }
+         double getRadExp() { return p_radexp; }
 
-      void setPressure( double pres_i ) { m_press = pres_i; }
-      
-      void setGamma( double gamma ) { m_gamma = gamma; }
-      
-      void setFFModel( int ffmodel ) { p_ffmodel = ffmodel; }
+         //double& getGrid() { return m_grid; }
 
-      void setVDWDispersion( int vdwdispersion ) 
-            { m_vdwdispersion = vdwdispersion; }
+         void write() const ;
 
-      void setExtValue( double extvalue ) { p_extvalue = extvalue; }
-      
-      void setSDie( double epsilons ) { m_sdie = epsilons; }
-      
-      void setPDie( double epsilonp ) { m_pdie = epsilonp; }
+         //
+         //  for debugging
+         //
+         void printAllParams();
 
-      void setGrid( double grid[3] ) 
-         { m_grid[0] = grid[0];
-           m_grid[1] = grid[1];
-           m_grid[2] = grid[2]; }
-
-      void setETolSolvation( double etol ) { m_etolSolvation = etol ; }
-
-      void setETolSolver( double tol ) { m_tol = tol ; }
-   
-      //Lennard-Jones well depth parameter for water
-      void setLJWell( double depth ) { p_epsilonw = depth ; } 
-
-      // uncomment if needed:
-      //void setNPiter( int npiter ) { p_npiter = npiter; }
-      //void setNGiter( int ngiter ) { p_ngiter = ngiter; }
-      //void setTauVal( double tauval ) { p_tauval = p_tauval; }
-      //void setProb( double prob ) { p_prob = prob; }
-
-      double getExperValue() { return p_expervalue; }
-
-      double getPressure() { return m_press; }
-      
-      double getGamma() { return m_gamma; }
-      
-      int getFFModel() { return p_ffmodel; }
-
-      double getVDWDispersion() { return m_vdwdispersion; }
-
-      double getExtValue() { return p_extvalue; }
-      
-      double getSDie() { return m_sdie; }
-      
-      double getPDie() { return m_pdie; }
-
-      double getRadExp() { return p_radexp; }
-
-      //double& getGrid() { return m_grid; }
-
-      void write() const ;
-
-      //
-      //  for debugging
-      //
-      void printAllParams();
-
-      struct GeometricFlowOutput run( const AtomList& atomList );
-      
+         struct GeometricFlowOutput run( const AtomList& atomList );
+         
 
 
-};
+   };
+
+}
 
 #endif
 

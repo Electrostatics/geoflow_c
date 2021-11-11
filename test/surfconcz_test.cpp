@@ -57,6 +57,8 @@
 
 #include "modules.h"
 
+using namespace geoflow;
+
 /*
  * We test this function against results obtained from the original Fortran
  * code.

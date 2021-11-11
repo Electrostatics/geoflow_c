@@ -57,6 +57,8 @@
 
 #include "Atom.h"
 
+using namespace geoflow;
+
 /*
  * We test this function against results obtained from the original Fortran
  * code.
@@ -72,7 +74,7 @@ protected:
 		Atom a(1, 0.0, 0.0, 0.0, 1.87, -0.257);
 		Atom b(1, 1.372, 0.0, 0.0, 1.4, -0.317);
 		Atom c(1, 1.764, 1.292, 0.0, 1.87, 0.398);
-		AtomList AL(
+		AtomList AL()
 
 		// 1.90 magic?  It's called EXTVALUE.
 		//domainini(xyzr, natm, 1.90);
