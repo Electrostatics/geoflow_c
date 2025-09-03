@@ -1,8 +1,8 @@
 include(FetchContent)
-# google test commit e2239ee = v1.11.0
+# google test commit 52eb810 = v1.17.0
 FetchContent_Declare(
   googletest
-  URL https://github.com/google/googletest/archive/e2239ee6043f73722e7aa812a459f54a28552929.zip
+  URL https://github.com/google/googletest/archive/52eb8108c5bdec04579160ae17225d66034bd723.zip
 )
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
